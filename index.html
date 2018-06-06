@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -7,38 +8,51 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss/dist/tailwind.min.css" rel="stylesheet">
 </head>
+
 <body>
     <div class="min-h-screen flex justify-center">
         <div class="flex items-center ml-8 mt-8" id="app">
             <div>
                 <div class="flex items-center">
-                    <label for="" class="font-thin text-lg text-grey-darker mr-2">Message :</label>
-                    <input type="text" class="py-1 px-2 border-2 rounded" id="value" v-model="message">
+                    <button v-show="!show" @click="show = !show" id="showbutton" class="bg-blue hover:bg-blue-light font-hairline text-lg tracking-wide py-2 px-3 rounded text-white border">
+                        Show
+                    </button>
+
+                    <button v-show="show" @click="show = !show" id="hidebutton" class="hover:bg-blue hover:text-white font-hairline text-lg border border-blue tracking-wide py-2 px-3 rounded text-blue">
+                        Hide
+                    </button>
                 </div>
-                <p class="display text-center mt-8 font-hairline text-lg text-grey-darkest">{{ message }}</p>
+                <p v-show="show" class="display text-center mt-8 font-bold text-lg text-purple">Clicked</p>
             </div>
         </div>
     </div>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script>
-        $(function() {
-            $('#app').keyup(function(e) {
-                var value = $(this).find('#value').val();
-                var display = $(this).find('.display');
-                display.empty()
-                display.append(value);
-            });
+    $(function() {
+        $('#hidebutton').hide();
+        $('.display').hide();
+        $('#showbutton').click(function(e) {
+            $('#hidebutton').toggle();
+            $('.display').toggle();
+            $('#showbutton').toggle();
         })
+        $('#hidebutton').click(function(e) {
+            $('#hidebutton').toggle();
+            $('.display').toggle();
+            $('#showbutton').toggle();
+        })
+    })
     </script>
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <script>
         new Vue({
             el : '#app',
             data : {
-                message : ''
+                show : false,
             }
         })
     </script>
 </body>
+
 </html>
