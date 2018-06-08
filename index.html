@@ -11,45 +11,99 @@
 
 <body>
     <div class="min-h-screen flex justify-center">
-        <div class="flex items-center ml-8 mt-8" id="app">
-            <div>
-                <div class="flex items-center">
-                    <button v-show="!show" @click="show = !show" id="showbutton" class="bg-blue hover:bg-blue-light font-hairline text-lg tracking-wide py-2 px-3 rounded text-white border">
-                        Show
-                    </button>
-
-                    <button v-show="show" @click="show = !show" id="hidebutton" class="hover:bg-blue hover:text-white font-hairline text-lg border border-blue tracking-wide py-2 px-3 rounded text-blue">
-                        Hide
-                    </button>
-                </div>
-                <p v-show="show" class="display text-center mt-8 font-bold text-lg text-purple">Clicked</p>
-            </div>
+        <div class="flex items-center ml-8 mt-8 w-2/3" id="app">
+               <form @submit.prevent="submitForm" id="form" class="w-full flex flex-col">
+                   <div class="flex flex-col mb-4">
+                       <label for="" class="text-sm font-thin text-grey-darker mb-2">Name :</label>
+                       <input v-model="name" id="name" type="text" class="py-1 px-2 border rounded border-blue">
+                   </div>
+                   <div class="flex flex-col mb-4">
+                        <label for="" class="text-sm font-thin text-grey-darker mb-2">Email :</label>
+                        <input v-model="email" id="email" type="text" class="py-1 px-2 border rounded border-blue">
+                    </div>
+                    <div class="flex flex-col mb-4">
+                            <label for="" class="text-sm font-thin text-grey-darker mb-2">Content :</label>
+                            <textarea v-model="content" id="content" type="text" class="py-1 px-2 border rounded border-blue"></textarea>
+                    </div>
+                    <div class="w-full">
+                        <button v-show="active" type="submit" id="activeButton" class="bg-blue-light text-white py-2 font-thin w-full hover:bg-blue-lighter rounded">Send</button>
+                        <button v-show="!active" id="disabledButton" class="bg-blue-light text-white py-2 font-thin w-full hover:bg-blue-lighter rounded opacity-50 cursor-not-allowed">Send</button>
+                    </div>
+                    <pre class="response border mt-8 p-8"> {{ response }}</pre>
+               </form>
         </div>
     </div>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script>
-    $(function() {
-        $('#hidebutton').hide();
-        $('.display').hide();
-        $('#showbutton').click(function(e) {
-            $('#hidebutton').toggle();
-            $('.display').toggle();
-            $('#showbutton').toggle();
-        })
-        $('#hidebutton').click(function(e) {
-            $('#hidebutton').toggle();
-            $('.display').toggle();
-            $('#showbutton').toggle();
-        })
-    })
-    </script>
+    //     $(function() {
+    //         $('#activeButton').hide();
+            
+    //         $('#name').keyup(function() {
+    //             $('#disabledButton').show();
+    //             $('#activeButton').hide();
+
+    //             if($(this).val().length > 0)
+    //             {
+    //                 $('#disabledButton').hide();
+    //                 $('#activeButton').show();
+    //             }
+    //         })
+    //         $("#form").submit(function(event) {
+    //             event.preventDefault()
+    //             var data = {
+    //                 name : $("#name").val(),
+    //                 email : $("#email").val(),
+    //                 content : $("#content").val(),
+    //             }
+
+    //             $.ajax({
+    //                 type : "POST",
+    //                 url : '//jsonplaceholder.typicode.com/posts',
+    //                 data : data,
+    //                 dataType : 'json',
+    //                 encode : true
+    //             }).done(function(data) {
+    //                 $('.response').empty().append(JSON.stringify(data,null,2))
+    //             })
+    //         })
+    //     })
+    // </script>
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script>
         new Vue({
             el : '#app',
             data : {
-                show : false,
+                name : '',
+                email : '',
+                content : '',
+                active : false,
+                response : ''
+            },
+            watch : {
+                name(value) {
+                    this.active = false
+                    if(value.length > 0)
+                    {
+                        this.active = true
+                    }
+                }
+            },
+            methods: {
+                submitForm() {
+                    axios.post('//jsonplaceholder.typicode.com/posts', {
+                        name: this.name,
+                        email: this.email,
+                        content : this.content
+                    })
+                    .then((response) => {
+                        this.response = response.data
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+                }
             }
         })
     </script>
